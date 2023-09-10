@@ -12,6 +12,7 @@ gradio_cached_examples/
 flagged/
 *.pth
 *.pt
+data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
