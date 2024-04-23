@@ -4,7 +4,6 @@ from typing import Dict, List
 import cv2
 import torch
 import numpy as np
-import inflect
 
 from deva.inference.object_info import ObjectInfo
 from deva.inference.inference_core import DEVAInferenceCore
@@ -15,7 +14,7 @@ from deva.ext.grounding_dino import segment_with_text
 try:
     from groundingdino.util.inference import Model as GroundingDINOModel
 except ImportError:
-    # not sure why this happens somethimes
+    # not sure why this happens sometimes
     from GroundingDINO.groundingdino.util.inference import Model as GroundingDINOModel
 from segment_anything import SamPredictor
 
@@ -43,13 +42,6 @@ def process_frame_with_text(deva: DEVAInferenceCore,
     raw_prompt = cfg['prompt']
     prompts = raw_prompt.split('.')
 
-    if cfg['pluralize']:
-        # making the prompt plural seems to increase recall
-        p = inflect.engine()
-        input_prompt = [f'{p.plural_noun(prompt)}' for prompt in prompts]
-    else:
-        input_prompt = prompts
-
     h, w = image_np.shape[:2]
     new_min_side = cfg['size']
     need_resize = new_min_side > 0
@@ -64,7 +56,7 @@ def process_frame_with_text(deva: DEVAInferenceCore,
     if cfg['temporal_setting'] == 'semionline':
         if ti + cfg['num_voting_frames'] > deva.next_voting_frame:
             mask, segments_info = make_segmentation_with_text(cfg, image_np, gd_model, sam_model,
-                                                              input_prompt, new_min_side)
+                                                              prompts, new_min_side)
             frame_info.mask = mask
             frame_info.segments_info = segments_info
             frame_info.image_np = image_np  # for visualization only
@@ -116,7 +108,7 @@ def process_frame_with_text(deva: DEVAInferenceCore,
         if ti % cfg['detection_every'] == 0:
             # incorporate new detections
             mask, segments_info = make_segmentation_with_text(cfg, image_np, gd_model, sam_model,
-                                                              input_prompt, new_min_side)
+                                                              prompts, new_min_side)
             frame_info.segments_info = segments_info
             prob = deva.incorporate_detection(image, mask, segments_info)
         else:

@@ -1,5 +1,24 @@
 # Details on the Demo
 
+## Pipeline 
+
+The high-level description below is for the online setting. In the semi-online setting, the detections are first merged across a small clip.
+The first frame is always initialized with detection without propagation.
+
+### Text-prompted mode (recommended)
+1. DEVA propagates masks from memory to the current frame
+2. If this is a detection frame, go to the next step. Otherwise, no further processing is needed for this frame.
+3. Grounding DINO takes the text prompt and generates some bounding boxes
+4. Segment Anything takes the bounding boxes and generates corresponding segmentation masks
+5. The propagated masks are compared to and merged with the segmentation from Segment Anything
+
+### Automatic mode
+1. DEVA propagates masks from memory to the current frame.
+2. If this is a detection frame, go to the next step. Otherwise, no further processing is needed for this frame.
+3. We generate a grid of points on the unsegmented regions.
+4. Segment Anything takes the points and generates corresponding segmentation masks.
+5. The propagated masks are compared to and merged with the segmentation from Segment Anything.
+
 ## Tips on Speeding up Inference
 
 **General Tips:**
@@ -29,19 +48,24 @@
 
 ## Explanation of arguments
 
-- `DINO_THRESHOLD`: threshold for DINO to be considered as a valid detection
-- `SAM_NUM_POINTS_PER_SIDE`: number of points per side to use for automatic grid-based prompting in SAM
-- `SAM_NUM_POINTS_PER_BATCH`: number of points prompts to process in parallel in SAM
-- `SAM_PRED_IOU_THRESHOLD`: threshold of predicted IoU to be considered as a valid segmentation for SAM
-- `SAM_OVERLAP_THRESHOLD`: if suppress_small_objects are enabled, this is the IoU threshold for the suppression. A lower threshold means more segmentation masks (less suppression).
+General:
 - `detection_every`: number of frames between two consecutive detections; a higher number means faster inference but slower responses to new objects
 - `amp`: enable mixed precision; is faster and has a lower memory usage
 - `chunk_size`: number of objects to be processed in parallel; a higher number means faster inference but higher memory usage
 - `size`: internal processing resolution for the propagation module; defaults to 480
-- `max_missed_detection_count`: maximum number of consecutive detections that can be missed before an object is deleted from memory
+- `max_missed_detection_count`: maximum number of consecutive detections that can be missed before an object is deleted from memory. 
 - `max_num_objects`: maximum number of objects that can be tracked at the same time; new objects are ignored if this is exceeded
-- `do_not_pluralize`: pluralization is enabled by default, e.g., turning "pig" into "pigs" and "person" into "people". This seems to increase recall. If you want to disable pluralization, set this to True.
+
+Text-prompted mode only:
+- `DINO_THRESHOLD`: threshold for DINO to consider a detection as valid
+- `prompt`: text prompt to use, separate by a full stop; e.g. "people.trees". The wording of the prompt and minor details like pluralization might affect the results.
+
+Automatic mode only:
+- `SAM_NUM_POINTS_PER_SIDE`: number of points per side to use for automatic grid-based prompting in SAM
+- `SAM_NUM_POINTS_PER_BATCH`: number of points prompts to process in parallel in SAM
+- `SAM_PRED_IOU_THRESHOLD`: threshold of predicted IoU to be considered as a valid segmentation for SAM
 - `suppress_small_objects`: if enabled, small objects that overlap with large objects are suppressed during the automatic mode; does not matter in the text-prompted mode
+- `SAM_OVERLAP_THRESHOLD`: if suppress_small_objects are enabled, this is the IoU threshold for the suppression. A lower threshold means more segmentation masks (less suppression)
 
 ## Source videos
 

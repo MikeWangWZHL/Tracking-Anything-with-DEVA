@@ -5,7 +5,7 @@ We provide five evaluation scripts that can be used on common benchmarks. If you
 The scripts are:
 1. Video Object Segmentation (VOS) evaluation
 2. Open-World/Large-Vocabulary/Unsupervised Video Object Segmentation on VIPSeg/BURST/DAVIS 2017
-3. Unsupvised Video Object Segmentation (or rather, saliency) on DAVIS 2016
+3. Unsupervised Video Object Segmentation (or rather, saliency) on DAVIS 2016
 4. Referring Video Object Segmentation (Ref-VOS) evaluation for the Ref-DAVIS dataset
 5. Referring Video Object Segmentation (Ref-VOS) evaluation for the Ref-YouTubeVOS dataset
 
@@ -13,7 +13,7 @@ Only (1) is standalone. (2)-(5) require detections from an image model.
 
 We provide:
 1. Pretrained DEVA model (which you can obtain from `scripts/download_models.sh`).
-2. Pre-computed detections from image models.[[All can be found here]](https://drive.google.com/drive/folders/1iBJBoKZAFaNYM_6uwBR0Vvc6q0nHXbFR?usp=sharing).
+2. Pre-computed detections from image models. [[All can be found here]](https://drive.google.com/drive/folders/1iBJBoKZAFaNYM_6uwBR0Vvc6q0nHXbFR?usp=sharing).
 3. Pre-computed outputs from DEVA. [[All can be found here]](https://drive.google.com/drive/folders/1iBJBoKZAFaNYM_6uwBR0Vvc6q0nHXbFR?usp=sharing).
 4. Links to the repositories of the image models.
 
@@ -44,7 +44,7 @@ To get quantitative results:
 - YouTubeVOS 2019 validation: [CodaLab](https://codalab.lisn.upsaclay.fr/competitions/6066)
 
 
-*Known issue: We note that DEVA video object segmentation does not perform as well as XMem for very long videos after further testing. This characterized by a much higher false positive rate when the target object is out-of-view. This might be a consequence of "stable data augmentation" which means the target object is in-view most of the time.during training.*
+*Known issue: We note that DEVA video object segmentation does not perform as well as XMem for very long videos after further testing. This is characterized by a much higher false positive rate when the target object is out-of-view. This might be a consequence of "stable data augmentation" which means the target object is in-view most of the time during training.*
 
 ## Open-World/Large-Vocabulary/Unsupervised Video Object Segmentation
 

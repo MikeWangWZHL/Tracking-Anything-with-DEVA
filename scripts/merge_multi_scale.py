@@ -8,7 +8,7 @@ import numpy as np
 import hickle as hkl
 from PIL import Image, ImagePalette
 
-from progressbar import progressbar
+from tqdm import tqdm
 from multiprocessing import Pool
 from deva.utils import palette
 
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     parser.add_argument('--list', nargs="+")
     parser.add_argument('--pattern',
                         default=None,
-                        help='Glob patten. Can be used in place of list.')
+                        help='Glob pattern. Can be used in place of list.')
     parser.add_argument('--output')
     parser.add_argument('--num_proc', default=4, type=int)
     args = parser.parse_args()
@@ -123,7 +123,7 @@ if __name__ == '__main__':
     print('Total number of videos: ', len(all_vid))
 
     pool = Pool(processes=args.num_proc)
-    for _ in progressbar(pool.imap_unordered(process_vid, all_vid), max_value=len(all_vid)):
+    for _ in tqdm(pool.imap_unordered(process_vid, all_vid), max_value=len(all_vid)):
         pass
 
     pool.close()
